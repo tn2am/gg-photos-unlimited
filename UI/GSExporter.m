@@ -5,15 +5,8 @@ static NSArray<NSURL *> *GSWriteOriginalResources(PHAsset *asset,NSURL *director
  NSArray *resources=[PHAssetResource assetResourcesForAsset:asset];NSMutableArray *chosen=[NSMutableArray array];
  PHAssetResourceType type=asset.mediaType==PHAssetMediaTypeVideo?PHAssetResourceTypeVideo:PHAssetResourceTypePhoto;
  for(PHAssetResource *r in resources)if(r.type==type){[chosen addObject:r];break;}
- if(!chosen.count){
-  for(PHAssetResource *r in resources){
-   if(r.type==PHAssetResourceTypeAlternatePhoto||r.type==PHAssetResourceTypeFullSizePhoto){[chosen addObject:r];break;}
-  }
- }
- if(asset.mediaSubtypes&PHAssetMediaSubtypePhotoLive){
-  for(PHAssetResource *r in resources)if(r.type==PHAssetResourceTypePairedVideo){[chosen addObject:r];break;}
- }
- if(!chosen.count){
+ if(asset.mediaSubtypes&PHAssetMediaSubtypePhotoLive)for(PHAssetResource *r in resources)if(r.type==PHAssetResourceTypePairedVideo){[chosen addObject:r];break;}
+ if(!chosen.count||((asset.mediaSubtypes&PHAssetMediaSubtypePhotoLive)&&chosen.count!=2)){
   if(error)*error=[NSError errorWithDomain:@"Gunshot" code:2 userInfo:@{NSLocalizedDescriptionKey:GSL(@"Original media resources are unavailable.")}];return nil;
  }
  NSMutableArray *files=[NSMutableArray array];
@@ -24,12 +17,7 @@ static NSArray<NSURL *> *GSWriteOriginalResources(PHAsset *asset,NSURL *director
   dispatch_semaphore_t done=dispatch_semaphore_create(0);__block NSError *exportError=nil;
   [PHAssetResourceManager.defaultManager writeDataForAssetResource:r toFile:url options:options completionHandler:^(NSError *e){exportError=e;dispatch_semaphore_signal(done);}];
   dispatch_semaphore_wait(done,DISPATCH_TIME_FOREVER);
-  if(exportError){if(error)*error=exportError;return nil;}
-  NSDictionary *attrs=[NSFileManager.defaultManager attributesOfItemAtPath:url.path error:nil];
-  if(!attrs||[attrs[NSFileSize]longLongValue]<=0){
-   if(error)*error=[NSError errorWithDomain:@"Gunshot" code:3 userInfo:@{NSLocalizedDescriptionKey:GSL(@"Original media resources are unavailable.")}];return nil;
-  }
-  [files addObject:url];
+  if(exportError){if(error)*error=exportError;return nil;}[files addObject:url];
  }
  return files;
 }
