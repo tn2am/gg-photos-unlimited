@@ -6,6 +6,7 @@
 #import "../UI/GSPhotosIntegration.h"
 #import "../UI/GSAccountConnection.h"
 #import "../UI/GSUploadMonitor.h"
+#import "../UI/GSBatchImport.h"
 #import "SideloadKeychain.h"
 #import "SideloadIdentity.h"
 
@@ -27,7 +28,7 @@ __attribute__((constructor)) static void GSLoadJailed(void) {
  if(![executable isEqualToString:@"GooglePhotos"])return;
  GSStartAccountConnection();
  [NSNotificationCenter.defaultCenter addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification *note){GSResumeAccountConnection();}];
- GSInstallAccountMenu();GSStartBackupIntegration();
+ GSInstallAccountMenu();GSStartBackupIntegration();GSAutoScanIfEnabled();
  Method activity=class_getInstanceMethod(UIActivityViewController.class,@selector(initWithActivityItems:applicationActivities:));
  if(activity)GSOriginalActivityInit=(void *)method_setImplementation(activity,(IMP)GSActivityInit);
  });

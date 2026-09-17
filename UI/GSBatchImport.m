@@ -9,6 +9,47 @@
 @property(nonatomic,copy) NSString *identity;
 @end
 @implementation GSImportBatch @end
+
+void GSAutoScanIfEnabled(void) {
+    if (![NSUserDefaults.standardUserDefaults boolForKey:@"dev.tqmane.gunshot.autoScanEnabled"]) return;
+    
+    NSDictionary *accounts = GSRequest(@{@"op":@"accounts"}, nil);
+    if (!accounts || ![accounts[@"selected"] length]) return;
+    NSString *account = accounts[@"selected"];
+    
+    NSDictionary *native = GSNativeAccountSummary();
+    NSString *identity = native[@"identifier"];
+    if (GSIsGooglePhotos() && !identity.length) return;
+    
+    if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized && PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusLimited) return;
+
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+        PHFetchOptions *opts = [[PHFetchOptions alloc] init];
+        opts.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
+        PHFetchResult<PHAsset *> *allAssets = [PHAsset fetchAssetsWithOptions:opts];
+        
+        NSMutableArray *scanned = [[NSUserDefaults.standardUserDefaults arrayForKey:@"dev.tqmane.gunshot.scannedAssets"] mutableCopy] ?: [NSMutableArray array];
+        NSSet *scannedSet = [NSSet setWithArray:scanned];
+        NSMutableArray *unbackedIds = [NSMutableArray array];
+        
+        [allAssets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
+            if (![scannedSet containsObject:asset.localIdentifier]) {
+                [unbackedIds addObject:asset.localIdentifier];
+            }
+        }];
+        
+        if (unbackedIds.count == 0) return;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            BOOL started = GSStartBatchImport(unbackedIds.count, @"auto", YES, GSPhotoIdentifierProvider(unbackedIds), account, identity, ^(NSDictionary *state){}, ^(NSDictionary *state){});
+            if (started) {
+                [scanned addObjectsFromArray:unbackedIds];
+                [NSUserDefaults.standardUserDefaults setObject:scanned forKey:@"dev.tqmane.gunshot.scannedAssets"];
+            }
+        });
+    });
+}
+
 static GSImportBatch *GSCurrentBatch;
 static NSDictionary *GSLastBatch;
 static dispatch_queue_t GSBatchQueue;

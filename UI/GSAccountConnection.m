@@ -45,8 +45,6 @@ static void GSConnectAvailableAccount(BOOL foreground) {
     NSString *current=[NSUserDefaults.standardUserDefaults stringForKey:@"dev.tqmane.gunshot.routeAccount"];
     if(!current.length){
      [NSUserDefaults.standardUserDefaults setObject:account[@"email"] forKey:@"dev.tqmane.gunshot.routeAccount"];
-    }
-    if([NSUserDefaults.standardUserDefaults objectForKey:@"dev.tqmane.gunshot.routeManualBackup"]==nil){
      [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"dev.tqmane.gunshot.routeManualBackup"];
     }
    }

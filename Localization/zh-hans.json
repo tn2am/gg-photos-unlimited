@@ -1,7 +1,7 @@
 {
   "Check the GoToHP queue for details. Native upload has not been used.": "未使用原生上传，请在 GoToHP 队列中查看详情",
   "Original quality (original data available)": "原始画质 (原始数据可用)",
-  "GoToHP settings": "GoToHP 设置",
+  "tn2aMod Settings": "GoToHP 设置",
   "Liquid Glass for the bottom bar and search button. Requires iOS 26 or later.": "开启底栏和搜索按钮的液态玻璃效果 (需要 iOS 26+)",
   "Restart Google Photos to apply the Liquid Glass change.": "重启 Google Photos 来应用液态玻璃更改",
   "The selected photos could not be retrieved.": "无法获取已选择的图片",
@@ -133,5 +133,8 @@
   "Open folder": "打开文件夹",
   "Upload all accessible photos and videos": "上传所有可读取的媒体",
   "Add %lu items to the queue? Originals are prepared one at a time. Keep the app open.": "是否要添加 %lu 项内容到队列？原图的准备工作将逐一进行，请保持 App 开启",
-  "No accessible photos in this album. Check photo permissions.": "此相册中无可访问的图片，请检查访问权限"
+  "No accessible photos in this album. Check photo permissions.": "此相册中无可访问的图片，请检查访问权限",
+  "Scan unbacked photos": "扫描未备份的照片",
+  "Auto-scan on launch": "启动时自动扫描",
+  "No unbacked photos found.": "没有找到未备份的照片。"
 }

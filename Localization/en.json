@@ -1,7 +1,7 @@
 {
   "Check the GoToHP queue for details. Native upload has not been used.": "Check the GoToHP queue for details. Native upload has not been used.",
   "Original quality (original data available)": "Original quality (original data available)",
-  "GoToHP settings": "GoToHP settings",
+  "tn2aMod Settings": "tn2aMod Settings",
   "Liquid Glass for the bottom bar and search button. Requires iOS 26 or later.": "Liquid Glass for the bottom bar and search button. Requires iOS 26 or later.",
   "Restart Google Photos to apply the Liquid Glass change.": "Restart Google Photos to apply the Liquid Glass change.",
   "The selected photos could not be retrieved.": "The selected photos could not be retrieved.",
@@ -133,5 +133,8 @@
   "Open folder": "Open folder",
   "Upload all accessible photos and videos": "Upload all accessible photos and videos",
   "Add %lu items to the queue? Originals are prepared one at a time. Keep the app open.": "Add %lu items to the queue? Originals are prepared one at a time. Keep the app open.",
-  "No accessible photos in this album. Check photo permissions.": "No accessible photos in this album. Check photo permissions."
+  "No accessible photos in this album. Check photo permissions.": "No accessible photos in this album. Check photo permissions.",
+  "Scan unbacked photos": "Scan unbacked photos",
+  "Auto-scan on launch": "Auto-scan on launch",
+  "No unbacked photos found.": "No unbacked photos found."
 }

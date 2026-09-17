@@ -98,14 +98,7 @@ static void GSStart(id request,SEL selector,IMP original){
   NSDictionary *account=GSNativeAccountSummary();NSString *destination=GSNativeRoutingAccount();
   if(!destination.length && account[@"email"]){destination=account[@"email"];GSSetNativeRouting(YES,destination);}
   if(transfer.cancelled)return;
-  if(![destination isEqual:account[@"email"]]||!GSNativeAccountMatches(GSGet(GSGet(request,@"credentials"),@"accountID"))){
-   if(account[@"email"]){
-    destination=account[@"email"];
-    GSSetNativeRouting(YES,destination);
-   } else {
-    GSCount(@"accountMismatch");GSFail(request,2);return;
-   }
-  }
+  if(![destination isEqual:account[@"email"]]||!GSNativeAccountMatches(GSGet(GSGet(request,@"credentials"),@"accountID"))){GSCount(@"accountMismatch");GSFail(request,2);return;}
   transfer.account=destination;transfer.identityIdentifier=account[@"identifier"];
   dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY,0),^{
    NSError *error=nil;

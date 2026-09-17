@@ -109,6 +109,7 @@ func TestRestrictionsRetryAndSanitizedError(t *testing.T) {
 		called++
 		return "", errors.New("secret=TOKEN_DONT_LEAK")
 	})
+	e.state.Options.WiFiOnly = true
 	j := importTest(t, e, "original")
 	e.Tick()
 	if called != 0 {

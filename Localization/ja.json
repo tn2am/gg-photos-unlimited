@@ -1,7 +1,7 @@
 {
   "Check the GoToHP queue for details. Native upload has not been used.": "GoToHP のキューで状態を確認してください。純正アップロードには切り替えていません。",
   "Original quality (original data available)": "オリジナル画質（原本データあり）",
-  "GoToHP settings": "GoToHP の設定",
+  "tn2aMod Settings": "GoToHP の設定",
   "Liquid Glass for the bottom bar and search button. Requires iOS 26 or later.": "下部バーと検索ボタンを Liquid Glass にします。iOS 26 以降で利用できます。",
   "Restart Google Photos to apply the Liquid Glass change.": "Liquid Glass の変更を反映するには Google Photos を再起動してください。",
   "The selected photos could not be retrieved.": "選択した写真を取得できませんでした。",
@@ -133,5 +133,8 @@
   "Open folder": "フォルダを開く",
   "Upload all accessible photos and videos": "アクセス可能な写真・動画をまとめてアップロード",
   "Add %lu items to the queue? Originals are prepared one at a time. Keep the app open.": "%lu件をキューに追加しますか？原本を1件ずつ準備します。アプリを開いたままにしてください。",
-  "No accessible photos in this album. Check photo permissions.": "このアルバムにアクセス可能な写真がありません。写真のアクセス権を確認してください。"
+  "No accessible photos in this album. Check photo permissions.": "このアルバムにアクセス可能な写真がありません。写真のアクセス権を確認してください。",
+  "Scan unbacked photos": "バックアップされていない写真をスキャン",
+  "Auto-scan on launch": "起動時に自動スキャン",
+  "No unbacked photos found.": "バックアップされていない写真はありません。"
 }

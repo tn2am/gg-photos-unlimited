@@ -5,6 +5,7 @@
 #import "UI/GSNativeRelay.h"
 #import "UI/GSAccountConnection.h"
 #import "UI/GSUploadMonitor.h"
+#import "UI/GSBatchImport.h"
 %hook UIWindow
 - (void)becomeKeyWindow {
  %orig;
@@ -27,6 +28,7 @@
   if(![[NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleExecutable"]isEqual:@"GooglePhotos"])return;
   GSStartAccountConnection();
   GSStartBackupIntegration();
+  GSAutoScanIfEnabled();
   [NSTimer scheduledTimerWithTimeInterval:60 repeats:YES block:^(NSTimer *timer){GSRefreshDaemonAccount();}];
   [NSNotificationCenter.defaultCenter addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:NSOperationQueue.mainQueue usingBlock:^(NSNotification *note){GSResumeAccountConnection();}];
  });

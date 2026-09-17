@@ -69,7 +69,7 @@ int main(void){@autoreleasepool{
  assert([source accountMenuViewController:controller numberOfCustomItemsInSectionAtIndex:1]==1);
  assert([source accountMenuViewController:controller numberOfCustomItemsInSectionAtIndex:0]==3);
  NSIndexPath *own=[NSIndexPath indexPathForRow:0 inSection:1],*other=[NSIndexPath indexPathForRow:0 inSection:0];
- assert([[[source accountMenuViewController:controller customItemAtIndexPath:own]title]isEqual:GSL(@"GoToHP settings")]);
+ assert([[[source accountMenuViewController:controller customItemAtIndexPath:own]title]isEqual:GSL(@"tn2aMod Settings")]);
  GSFixtureNode *session=[GSFixtureNode new],*presenter=[GSFixtureNode new],*deps=[GSFixtureNode new];session.accountMenuPresenter=presenter;presenter.accountMenuDependencies=deps;deps.customItemsDataSource=source;
  OGLAccountMenuUIEventHandler *handler=[OGLAccountMenuUIEventHandler new];handler.session=session;
  [handler performCustomActionType:1 indexPath:own accountMenuViewController:controller];
