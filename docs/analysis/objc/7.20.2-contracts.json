@@ -1,0 +1,527 @@
+{
+  "version": "7.20.2",
+  "build": "7.20.738660793",
+  "bundle_id": "com.google.photos",
+  "info_plist_minimum_os": "10.0",
+  "macho_minimum_os": "16.1",
+  "sdk": "17.5",
+  "arch": "arm64",
+  "cryptid": 0,
+  "sha256": {
+    "ipa": "4f3a7678370eea7c34f1f4ae3aa8b3af6947af940baea92fcc946f6fd56f9446",
+    "main": "869b97bdb7a9f5f693715422ad4549f62ac4166de35f7f7d5e0908d9d3aa20b2",
+    "ModuleFramework.framework": "6153ecaadcf00699af05509b9c48f1bb61407c4fcde513e2fe26551c83c21f5e"
+  },
+  "unlimited_title": {
+    "table_address": "0x6f285b0",
+    "index": "0x79",
+    "key": "OneGoogleStorageCardUnlimitedTitle"
+  },
+  "classes": {
+    "PHSAccountManagerImpl": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "ssoService",
+          "@16@0:8",
+          "0x131740"
+        ],
+        [
+          "viewingAccount",
+          "@16@0:8",
+          "0xe8c9c"
+        ]
+      ],
+      "class_methods": []
+    },
+    "PHSAccount": {
+      "image": "ModuleFramework.framework",
+      "superclass": "PHSBaseWithAccountID",
+      "instance_methods": [],
+      "class_methods": [],
+      "ivars": [
+        [
+          "_ssoIdentity",
+          "@\"<SSOIdentity>\""
+        ]
+      ]
+    },
+    "PHSBaseWithAccountID": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "accountID",
+          "@16@0:8",
+          "0xec43c"
+        ]
+      ],
+      "class_methods": []
+    },
+    "SSOIdentityPrivate": {
+      "image": "ModuleFramework.framework",
+      "superclass": "SSOIdentity",
+      "instance_methods": [
+        [
+          "accountID",
+          "@16@0:8",
+          "0xdf4b8"
+        ],
+        [
+          "userEmail",
+          "@16@0:8",
+          "0xdffcc"
+        ],
+        [
+          "userID",
+          "@16@0:8",
+          "0xdaa48"
+        ],
+        [
+          "hasValidAuth",
+          "B16@0:8",
+          "0xdf32c"
+        ]
+      ],
+      "class_methods": []
+    },
+    "SSOService": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "authorizationForIdentity:scopes:",
+          "@32@0:8@16@24",
+          "0x14a804"
+        ]
+      ],
+      "class_methods": []
+    },
+    "SSOAuthorizationImpl": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "authorizeRequest:completionHandler:",
+          "v32@0:8@16@?24",
+          "0x1b9934"
+        ],
+        [
+          "userEmail",
+          "@16@0:8",
+          "0x15ecb9c"
+        ]
+      ],
+      "class_methods": []
+    },
+    "PHSMyAccountMenuDataSource": {
+      "image": "main",
+      "superclass": "0x8010000000002bc5",
+      "instance_methods": [
+        [
+          "storageCardData",
+          "@16@0:8",
+          "0x10036adc4"
+        ],
+        [
+          "accountMenuViewController:performActionAtIndexPath:",
+          "v32@0:8@16@24",
+          "0x10036b388"
+        ],
+        [
+          "numberOfCustomSectionsForAccountMenuViewController:",
+          "Q24@0:8@16",
+          "0x10036b468"
+        ],
+        [
+          "accountMenuViewController:numberOfCustomItemsInSectionAtIndex:",
+          "Q32@0:8@16Q24",
+          "0x10036b614"
+        ],
+        [
+          "accountMenuViewController:customItemAtIndexPath:",
+          "@32@0:8@16@24",
+          "0x10036b680"
+        ]
+      ],
+      "class_methods": []
+    },
+    "OGLAccountMenuUIEventHandler": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "performCustomActionType:indexPath:accountMenuViewController:",
+          "v40@0:8q16@24@32",
+          "0x540cc8"
+        ]
+      ],
+      "class_methods": []
+    },
+    "OGLAccountMenuCustomItem": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "initWithTitle:icon:itemType:",
+          "@40@0:8@16@24q32",
+          "0x53dd28"
+        ],
+        [
+          "title",
+          "@16@0:8",
+          "0x53dde8"
+        ]
+      ],
+      "class_methods": []
+    },
+    "OGLAccountMenuStorageCardData": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "encodeWithCoder:",
+          "v24@0:8@16",
+          "0xb35b58"
+        ],
+        [
+          "storageState",
+          "q16@0:8",
+          "0xb35da4"
+        ]
+      ],
+      "class_methods": []
+    },
+    "OGLAccountSelectorStorageCardItem": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "storageState",
+          "q16@0:8",
+          "0xb339b8"
+        ]
+      ],
+      "class_methods": []
+    },
+    "OGLAccountSelectorStorageCardCell": {
+      "image": "ModuleFramework.framework",
+      "superclass": "OGLAccountSelectorCardBaseCell",
+      "instance_methods": [
+        [
+          "updateWithItem:",
+          "v24@0:8@16",
+          "0x5220a8"
+        ]
+      ],
+      "class_methods": [
+        [
+          "titleTextWithStorageItem:",
+          "@24@0:8@16",
+          "0x522ae4"
+        ]
+      ]
+    },
+    "OGLStringResources": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "stringForID:",
+          "@20@0:8i16",
+          "0x12d10c"
+        ]
+      ],
+      "class_methods": [
+        [
+          "sharedInstance",
+          "@16@0:8",
+          "0x12d074"
+        ]
+      ]
+    },
+    "PHSBackupActionBehaviorImpl": {
+      "image": "main",
+      "superclass": "PHSBaseGridBehaviorImpl",
+      "instance_methods": [
+        [
+          "backupLocalAssets:",
+          "v24@0:8@16",
+          "0x100462338"
+        ]
+      ],
+      "class_methods": []
+    },
+    "PHSActionsGridModel": {
+      "image": "ModuleFramework.framework",
+      "superclass": "PHSBaseGridModel",
+      "instance_methods": [
+        [
+          "backupLocalAssets:",
+          "v24@0:8@16",
+          "0xc22654"
+        ]
+      ],
+      "class_methods": []
+    },
+    "PHSLocalAsset": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "phAsset",
+          "@16@0:8",
+          "0x1026024"
+        ],
+        [
+          "isLocked",
+          "B16@0:8",
+          "0x1026684"
+        ]
+      ],
+      "class_methods": []
+    },
+    "GMUUploadRequest": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "start",
+          "v16@0:8",
+          "0x10c2478"
+        ],
+        [
+          "shouldTimeout",
+          "B16@0:8",
+          "0x10c2750"
+        ],
+        [
+          "cancel",
+          "v16@0:8",
+          "0x10c27d8"
+        ],
+        [
+          "uploadFetcherDidCompleteWithData:error:",
+          "v32@0:8@16@24",
+          "0x10c2934"
+        ],
+        [
+          "startFetcher",
+          "v16@0:8",
+          "0x10c3184"
+        ],
+        [
+          "didCompleteWithSuccess:resultantMediaItem:errorCode:",
+          "v36@0:8B16@20q28",
+          "0x10c3318"
+        ],
+        [
+          "didStart",
+          "B16@0:8",
+          "0x10c343c"
+        ],
+        [
+          "storagePolicy",
+          "i16@0:8",
+          "0x10c347c"
+        ],
+        [
+          "credentials",
+          "@16@0:8",
+          "0x10c34ac"
+        ]
+      ],
+      "class_methods": []
+    },
+    "GMUAssetUploadRequest": {
+      "image": "ModuleFramework.framework",
+      "superclass": "GMUUploadRequest",
+      "instance_methods": [
+        [
+          "shouldTimeout",
+          "B16@0:8",
+          "0x10aeed4"
+        ],
+        [
+          "start",
+          "v16@0:8",
+          "0x10aef40"
+        ],
+        [
+          "didCompleteWithSuccess:resultantMediaItem:errorCode:",
+          "v36@0:8B16@20q28",
+          "0x10b012c"
+        ],
+        [
+          "cancel",
+          "v16@0:8",
+          "0x10b03e0"
+        ],
+        [
+          "asset",
+          "@16@0:8",
+          "0x10b063c"
+        ]
+      ],
+      "class_methods": []
+    },
+    "GMUUploadMediaRequest": {
+      "image": "ModuleFramework.framework",
+      "superclass": "GMUAssetUploadRequest",
+      "instance_methods": [
+        [
+          "uploadFetcherDidCompleteWithData:error:",
+          "v32@0:8@16@24",
+          "0x10c0bc0"
+        ],
+        [
+          "cancel",
+          "v16@0:8",
+          "0x10c0e00"
+        ],
+        [
+          "shouldTimeout",
+          "B16@0:8",
+          "0x10c1024"
+        ],
+        [
+          "startCNDEUpload",
+          "v16@0:8",
+          "0x10c11a0"
+        ]
+      ],
+      "class_methods": []
+    },
+    "GMULivePhotoSingleUploadRequest": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "didStart",
+          "B16@0:8",
+          "0x10b7f8c"
+        ],
+        [
+          "start",
+          "v16@0:8",
+          "0x10b801c"
+        ],
+        [
+          "cancel",
+          "v16@0:8",
+          "0x10b80f4"
+        ],
+        [
+          "shouldTimeout",
+          "B16@0:8",
+          "0x10b81d8"
+        ],
+        [
+          "didCompleteWithError:resultantMediaItem:",
+          "v32@0:8@16@24",
+          "0x10b8438"
+        ],
+        [
+          "startEditedBytesUploadWithData:isPhotoUpload:",
+          "v28@0:8@16B24",
+          "0x10bb21c"
+        ],
+        [
+          "asset",
+          "@16@0:8",
+          "0x10bb514"
+        ],
+        [
+          "credentials",
+          "@16@0:8",
+          "0x10bb51c"
+        ],
+        [
+          "storagePolicy",
+          "i16@0:8",
+          "0x10bb60c"
+        ]
+      ],
+      "class_methods": []
+    },
+    "PHSUserItemsSynchronizer": {
+      "image": "ModuleFramework.framework",
+      "superclass": "PHSSynchronizer",
+      "instance_methods": [
+        [
+          "fetchData",
+          "v16@0:8",
+          "0xd8d7f4"
+        ],
+        [
+          "fetchDataSoft",
+          "v16@0:8",
+          "0xd8d7fc"
+        ]
+      ],
+      "class_methods": []
+    },
+    "PHSOneUpInfoPanelDetailsViewController": {
+      "image": "main",
+      "superclass": "PHSOneUpInfoPanelSectionViewController",
+      "instance_methods": [
+        [
+          "modelForBackedupStatus",
+          "@16@0:8",
+          "0x10082c084"
+        ],
+        [
+          "isBackedUp",
+          "B16@0:8",
+          "0x10082d710"
+        ]
+      ],
+      "class_methods": []
+    },
+    "PHSOneUpInfoPanelSectionViewController": {
+      "image": "main",
+      "superclass": "0x80100000000025a1",
+      "instance_methods": [
+        [
+          "contentViewModelWithTitle:subtitle:subtitleContainsHTML:image:",
+          "@44@0:8@16@24B32@36",
+          "0x100835b08"
+        ],
+        [
+          "extendedPhoto",
+          "@16@0:8",
+          "0x100836028"
+        ]
+      ],
+      "class_methods": []
+    },
+    "PHSServerPhoto": {
+      "image": "ModuleFramework.framework",
+      "superclass": "0x8010000000001a32",
+      "instance_methods": [
+        [
+          "hasOriginalBytes",
+          "C16@0:8",
+          "0x1028ad8"
+        ],
+        [
+          "isPartialBackup",
+          "B16@0:8",
+          "0x1028b00"
+        ],
+        [
+          "isLocked",
+          "B16@0:8",
+          "0x114998"
+        ],
+        [
+          "storagePolicy",
+          "C16@0:8",
+          "0x10299d4"
+        ]
+      ],
+      "class_methods": []
+    }
+  }
+}

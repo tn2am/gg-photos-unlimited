@@ -1,0 +1,78 @@
+package backend
+
+import (
+ "encoding/json"
+ "errors"
+ "net/url"
+ "os"
+ "path/filepath"
+ "strings"
+ "sync"
+)
+
+// UPSTREAM_PREFERENCES
+
+type AccountConfig struct { Credentials []string `json:"credentials"`; Selected string `json:"selected"` }
+type Config struct { Account AccountConfig `json:"account"`; Preferences Preferences `json:"preferences"` }
+type AccountSummary struct { Email string `json:"email"`; NeedsTokenBinding bool `json:"needsTokenBinding"` }
+type AccountsState struct { Accounts []AccountSummary `json:"accounts"`; Selected string `json:"selected"` }
+type ConfigManager struct{}
+var configMu sync.RWMutex
+var AppConfig Config
+var ConfigPath string
+var DefaultPreferences = Preferences{SkipIncompleteLivePhotos:true, UploadThreads:1}
+var DefaultConfig = Config{Preferences:DefaultPreferences}
+func ensureConfigLoaded() {} // Explicit initialization is required by the daemon.
+func currentConfig() Config { configMu.RLock(); defer configMu.RUnlock(); c:=AppConfig; c.Account.Credentials=append([]string(nil),c.Account.Credentials...); return c }
+func (g *ConfigManager) GetConfig() Config { return currentConfig() }
+func ParseAuthString(s string) (url.Values,error) { return url.ParseQuery(s) }
+func LooksLikeAuthString(s string) bool { v,e:=url.ParseQuery(strings.TrimSpace(s)); return e==nil && v.Get("Email")!="" && v.Get("Token")!="" }
+func credentialNeedsTokenBinding(v url.Values) bool { return v.Get("token_binding_alias")=="" && (v.Get("assertion_jwt")!="" || v.Get("check_tb_upgrade_eligible")!="") }
+func (g *ConfigManager) GetAccounts() AccountsState {
+ c:=currentConfig(); out:=AccountsState{Selected:c.Account.Selected, Accounts:[]AccountSummary{}}
+ for _,s:=range c.Account.Credentials { v,e:=url.ParseQuery(s); if e==nil { out.Accounts=append(out.Accounts,AccountSummary{v.Get("Email"),credentialNeedsTokenBinding(v)}) } }; return out
+}
+func LoadConfig(path string) error {
+ configMu.Lock(); defer configMu.Unlock()
+ b,e:=os.ReadFile(path); c:=DefaultConfig
+ if e!=nil && !os.IsNotExist(e) { return errors.New("credential store unavailable") }
+ if e==nil && json.Unmarshal(b,&c)!=nil { return errors.New("credential store corrupt") }
+ ConfigPath=path; AppConfig=c; return nil
+}
+func saveAppConfigLocked() error {
+ if ConfigPath=="" { return errors.New("not initialized") }
+ b,e:=json.Marshal(AppConfig); if e!=nil { return errors.New("encode credentials") }
+ return writeConfigAtomically(ConfigPath,b)
+}
+func writeConfigAtomically(path string, b []byte) error {
+ d:=filepath.Dir(path); if e:=os.MkdirAll(d,0700); e!=nil{return e}
+ f,e:=os.CreateTemp(d,".state-*"); if e!=nil{return e}; defer os.Remove(f.Name())
+ if _,e=f.Write(b);e==nil{e=f.Sync()}; ce:=f.Close(); if e!=nil{return e};if ce!=nil{return ce}
+ if e=os.Rename(f.Name(),path);e!=nil{return e}; fd,e:=os.Open(d);if e!=nil{return e};defer fd.Close();return fd.Sync()
+}
+func (g *ConfigManager) AddCredentials(s string) error {
+ v,e:=url.ParseQuery(strings.TrimSpace(s));if e!=nil{return errors.New("invalid credentials")}
+ for _,k:=range []string{"androidId","app","client_sig","Email","Token","lang","service"}{if v.Get(k)==""{return errors.New("missing credential field")}}
+ if credentialNeedsTokenBinding(v){return errors.New("binding key required; import a complete credential")}
+ // Validate against Google before saving; errors never cross the bridge verbatim.
+ if e=validateGooglePhotosCredential(v.Encode(),"");e!=nil{return errors.New("credential validation failed")}
+ return upsertCredential(v.Encode())
+}
+func (g *ConfigManager) SelectAccount(email string) error {
+ configMu.Lock();defer configMu.Unlock()
+ for _,s:=range AppConfig.Account.Credentials{v,_:=url.ParseQuery(s);if v.Get("Email")==email{old:=AppConfig.Account.Selected;AppConfig.Account.Selected=email;if e:=saveAppConfigLocked();e!=nil{AppConfig.Account.Selected=old;return e};return nil}}
+ return errors.New("account not found")
+}
+func (g *ConfigManager) RemoveCredentials(email string) error {
+ configMu.Lock();defer configMu.Unlock();old:=AppConfig.Account
+ next:=[]string{};found:=false
+ for _,s:=range old.Credentials{v,_:=url.ParseQuery(s);if v.Get("Email")==email{found=true}else{next=append(next,s)}}
+ if !found{return errors.New("account not found")};AppConfig.Account.Credentials=next
+ if old.Selected==email{AppConfig.Account.Selected=""}
+ if e:=saveAppConfigLocked();e!=nil{AppConfig.Account=old;return e};return nil
+}
+// GUI-compatible setters exist for upstream regression tests; IPC never exposes them.
+func updateAppConfig(update func(*Config)){configMu.Lock();defer configMu.Unlock();update(&AppConfig);_ = saveAppConfigLocked()}
+func(g *ConfigManager)GetSettings()Preferences{return currentConfig().Preferences}
+func(g *ConfigManager)SessionUploadOptions()UploadOptions{return g.GetSettings().UploadOptions()}
+// UPSTREAM_SETTERS

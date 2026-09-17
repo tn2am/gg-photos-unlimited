@@ -1,0 +1,71 @@
+package backend
+
+import (
+	"context"
+	"errors"
+	"io"
+	"net/http"
+)
+
+var ErrGunshotRemoteComponentExists = errors.New("remote Live Photo component already exists")
+
+type contextTransport struct {
+	ctx  context.Context
+	base http.RoundTripper
+}
+
+func (t contextTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	if err := t.ctx.Err(); err != nil {
+		if r.Body != nil {
+			_ = r.Body.Close()
+		}
+		return nil, err
+	}
+	// Keep the request/client deadline as well as the upload's cancellation.
+	ctx, cancel := context.WithCancel(r.Context())
+	stop := context.AfterFunc(t.ctx, cancel)
+	done := func() { stop(); cancel() }
+	response, err := t.base.RoundTrip(r.Clone(ctx))
+	if err != nil || response == nil || response.Body == nil {
+		done()
+	} else {
+		// RoundTrip ends at headers, not when the response body has been consumed.
+		response.Body = &gunshotContextBody{ReadCloser: response.Body, done: done}
+	}
+	return response, err
+}
+
+type gunshotContextBody struct {
+	io.ReadCloser
+	done func()
+}
+
+func (b *gunshotContextBody) Read(p []byte) (int, error) {
+	n, err := b.ReadCloser.Read(p)
+	if err != nil {
+		b.done()
+	}
+	return n, err
+}
+func (b *gunshotContextBody) Close() error { b.done(); return b.ReadCloser.Close() }
+
+// GunshotUpload keeps upstream's ordinary and paired upload paths intact.
+func GunshotUpload(ctx context.Context, paths []string, opts UploadOptions, reporter UploadReporter) (string, error) {
+	items, warnings := ClassifyUploadWork(paths, LivePhotoClassificationOptions{Enabled: len(paths) == 2, SkipIncomplete: true, Cancelled: func() bool { return ctx.Err() != nil }}, nil)
+	if len(warnings) > 0 || len(items) != 1 {
+		return "", errors.New("media pairing failed")
+	}
+	if len(paths) == 2 && items[0].Kind != UploadWorkLivePhoto {
+		return "", errors.New("not a Live Photo pair")
+	}
+	api, err := NewApi(opts.Api)
+	if err != nil {
+		return "", err
+	}
+	api.client.Transport = contextTransport{ctx, api.client.Transport}
+	key, skipped, err := uploadWorkItem(ctx, api, items[0], opts, 0, reporter)
+	if skipped && err == nil {
+		return "", ErrGunshotRemoteComponentExists
+	}
+	return key, err
+}

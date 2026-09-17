@@ -1,0 +1,50 @@
+# 初代 Pixel の原本と iPhone の画質表示
+
+## upstream の照合
+
+2026-09-12 に以下を確認しました。
+
+- [gotohp api.go](https://github.com/xob0t/gotohp/blob/0637c745dc590d74766b24eac80d689d2248e766/backend/api.go): original は Pixel XL、field 7=3、field 10=1。
+- [PhotosBackup GPMCClient.swift](https://github.com/g8row/PhotosBackup/blob/c3fff29/GPMC/Core/GPMCClient.swift): commitProfile と commit の同じ組合せ。
+- [PhotosBackup #11](https://github.com/g8row/PhotosBackup/issues/11): iPhone の Storage Saver 表示に対し Web は Original、ダウンロード後のサイズも元と同じという報告。開発者もモデル由来の表示差と説明しています。サイズ一致だけでは byte 一致を証明しません。
+- 本プロジェクトの利用者も今回の写真について Web のオリジナル画質表示を確認。
+
+Pixel XL は Pixel 2 ではなく初代 Pixel 系です。今回 profile や課金設定は変更して
+いません。容量不使用を維持するために通常 quota モードへ切り替える必要はありません。
+この照合は将来の非公式 API 動作やすべてのメディアの品質・容量計上を保証しません。
+
+## 7.92.0 の直接確認
+
+ローカル IPA の GooglePhotos framework を確認しました。IPA やバイナリは本リポジトリに含めません。
+
+| 対象 | 確認結果 |
+| --- | --- |
+| uploadQuality enum | Unknown=0, OriginalBytes=1, CompressedOriginal=2, Thumbnail=3。文字列・値列は file offset 0x5e1e0ec 付近 |
+| hasOriginalBytes enum | Unknown=0, Yes=1, No=2, Maybe=3。文字列・値列は file offset 0x5dfabb2 付近 |
+| PHSServerPhoto.initWithMCMediaItem: | 0x124c7d8 付近でサーバーの hasHasOriginalBytes / hasOriginalBytes を確認・保存 |
+| PHSServerPhoto.hasOriginalBytes | C16@0:8、0x124deb4。保存された enum を返す |
+| PHSServerPhoto.storagePolicy | quotaInfo.storagePolicy 由来。0x124cbb4 で保存 |
+| getBackupStatusModelData | main binary 0x1031620e0。quotaChargeable / quotaChargedBytes で容量文言を作り、0x103162228 の storagePolicy で画質文言を作る |
+| PHSUserItemsSynchronizer.fetchData | 0x909f38 → fetchWithType:0。アプリ所有の同期キュー・server store を利用 |
+
+## 表示補正の条件
+
+jailed / jailbreak のバックアップ連携が有効で、純正の詳細画面が既にバックアップ済みと判断し、
+サーバーモデルが hasOriginalBytes=Yes、storagePolicy=Standard、部分バックアップでは
+ない場合だけ、詳細画面の subtitle を「オリジナル画質（原本データあり）」にします。
+容量を示す backupStatus は純正の値をそのまま維持します。
+
+No / Unknown / Maybe、未バックアップ、部分バックアップは変更しません。GoToHP の
+設定が original という理由だけで成功・画質表示を変更する処理はありません。
+サーバーから原本情報が取得できない写真では、元の表示のままになる場合があります。
+
+## 診断
+
+- photosIntegration: qualityAvailable / syncAvailable、原本 enum の観測件数、画質表示補正件数、差分同期要求件数。
+- completionMonitor.uploadSummary（jailed では runtime.uploadSummary にも表示）: デフォルト画質、各ジョブの画質別・状態別件数と対応 profile、完了 revision。
+- uploadSummary の profile は送信ポリシーです。実メディアのサーバー側品質を一括で検証した意味ではありません。
+- アカウント、ファイル名、mediaKey、ハッシュ、トークンは追加診断に含めません。
+
+テストは、手動 UI → 共通要求 → Go の完了 → 純正完了、原本 enum による表示分岐、
+容量文言の保持、アカウント別の差分同期、永続完了 revision の保持を検証します。
+実機の画面更新タイミングと全メディア形式のサーバー情報は端末での確認が必要です。

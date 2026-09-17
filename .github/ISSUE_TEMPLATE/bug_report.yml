@@ -1,0 +1,136 @@
+name: Bug report
+description: Report a Gunshot problem with a required GoToHP log or Apple diagnostic file.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe the problem in English and attach **at least one GoToHP log or Apple `.ips` diagnostic file** from the affected session.
+
+        **GoToHP logs:** In Google Photos, open **GoToHP settings → Diagnostics**, enable **Upload diagnostics**, reproduce the problem, then choose **Export diagnostics**. Attach the exported JSON file.
+
+        **Apple diagnostics:** If the app crashes or you cannot open GoToHP settings, open **iOS Settings → Privacy & Security (Privacy on older iOS versions) → Analytics & Improvements → Analytics Data**. Share the relevant `GooglePhotos` or `gotohpd` `.ips` report, or the matching `JetsamEvent` report. **Put the original `.ips` file in a ZIP archive before attaching it**, because GitHub does not accept `.ips` uploads directly.
+
+        Review files before uploading: issues and attachments are public. Remove account identifiers and personal information, and never upload passwords, tokens, cookies, or photo/video contents. Preserve the diagnostic structure and stack traces. Screenshots may provide context but do not replace the required diagnostic file.
+
+  - type: input
+    id: gunshot-version
+    attributes:
+      label: Gunshot version and build source
+      description: Include the release version, or the Actions run URL / commit SHA if using a development build.
+      placeholder: "0.2.1 — GitHub Release"
+    validations:
+      required: true
+
+  - type: input
+    id: google-photos-version
+    attributes:
+      label: Google Photos version
+      description: Enter the exact installed version, not just "latest".
+      placeholder: "7.20.2 or 7.92.0"
+    validations:
+      required: true
+
+  - type: input
+    id: device-ios
+    attributes:
+      label: Device and iOS version
+      placeholder: "iPhone 8 — iOS 16.7.12"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation-mode
+    attributes:
+      label: Installation mode
+      options:
+        - Jailbreak — rootless
+        - Jailbreak — rootful
+        - Jailed — sideloaded IPA
+        - Jailed — LiveContainer
+    validations:
+      required: true
+
+  - type: input
+    id: installation-tools
+    attributes:
+      label: Jailbreak or installation tools
+      description: Include the jailbreak, sideloading / injection tool, or LiveContainer version. For jailbreak crashes, report whether the issue persists with only Gunshot enabled for Google Photos in Choicy.
+      placeholder: "palera1n / Dopamine / Sideloadly / LiveContainer, version and relevant details"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: affected-feature
+    attributes:
+      label: Affected feature
+      options:
+        - Google Photos manual backup
+        - Google Photos automatic backup
+        - Upload from GoToHP settings
+        - Account connection or authentication
+        - Daemon connection
+        - Crash or app launch
+        - Upload status or quality display
+        - Settings or unlimited storage display
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include the exact actions, how often this happens, and whether it worked in an earlier version.
+      placeholder: |
+        1. Open Google Photos.
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      placeholder: Describe what should happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: Include the exact error message and approximate failure time so it can be matched to the diagnostic file.
+      placeholder: Describe what actually happens.
+    validations:
+      required: true
+
+  - type: textarea
+    id: upload-settings
+    attributes:
+      label: Upload settings and media details
+      description: For upload issues, include quality mode, native backup routing on/off, Google Photos backup on/off, Wi-Fi-only / charging-only / pause settings, foreground/background state, and media type (JPEG, HEIC, video, Live Photo, etc.). Do not attach the media itself.
+
+  - type: upload
+    id: diagnostics
+    attributes:
+      label: Required diagnostic attachment
+      description: "Attach at least one GoToHP diagnostic JSON/log/text file, or a ZIP containing the relevant original Apple .ips report. A filename, screenshot, or description alone is insufficient."
+    validations:
+      required: true
+      accept: ".json,.log,.txt,.zip"
+
+  - type: checkboxes
+    id: diagnostic-confirmation
+    attributes:
+      label: Diagnostic confirmation
+      options:
+        - label: I attached a GoToHP log or a ZIP containing an Apple .ips diagnostic report from the affected session.
+          required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context or screenshots
+      description: Add any other relevant details. Hide account information in screenshots.

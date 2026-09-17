@@ -1,0 +1,35 @@
+package backend
+
+import (
+ "app/generated"
+ "io"
+ "net/http"
+ "net/http/httptest"
+ "testing"
+ "google.golang.org/protobuf/proto"
+)
+
+// Inspect the real serialized commit body, not UI labels or option mocks.
+func TestGunshotOriginalQualityWire(t *testing.T) {
+ defer GunshotSetNativeBearerProvider(nil)
+ GunshotSetNativeBearerProvider(func(string)(string,error){return "fixture-token",nil})
+ for _,tc:=range []struct{name string;saver,quota bool;quality int64;model string}{
+  {"original",false,false,3,"Pixel XL"},{"saver",true,false,1,"Pixel 2"},{"quota",false,true,3,"Pixel 8"},
+ }{t.Run(tc.name,func(t *testing.T){
+  server:=httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter,r *http.Request){
+   body,err:=io.ReadAll(r.Body);if err!=nil{t.Error(err);return}
+   var commit generated.CommitUpload
+   if err:=proto.Unmarshal(body,&commit);err!=nil{t.Error(err);return}
+   if commit.GetField1().GetQuality()!=tc.quality||commit.GetField2().GetModel()!=tc.model{t.Error("wrong quality or device profile on wire")}
+   // 7.92.0 enum descriptor: upload_quality=1 means OriginalBytes, not Saver.
+   if commit.GetField1().GetField10()!=1{t.Error("original-byte upload quality missing")}
+   if commit.GetField1().GetFileName()!="original.heic"{t.Error("original filename lost")}
+   response,_:=proto.Marshal(&generated.CreateMediaItemsResponse{Item:[]*generated.CreateMediaItemResponseItem{{ResultItem:&generated.CreateMediaItemResult{MediaKey:"server-key"}}}})
+   w.Write(response)
+  }));defer server.Close()
+  api,err:=newAPIFromCredential("Email=test%40example.com&gunshot_native_id=fixture","");if err!=nil{t.Fatal(err)}
+  api.saver=tc.saver;api.useQuota=tc.quota;api.commitEndpoint=server.URL
+  key,err:=api.CommitUpload(&generated.CommitToken{},"original.heic",make([]byte,20),123)
+  if err!=nil||key!="server-key"{t.Fatalf("commit failed: %v",err)}
+ })}
+}

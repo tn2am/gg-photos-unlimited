@@ -1,0 +1,3 @@
+[submodule "GotohpCore/upstream"]
+	path = GotohpCore/upstream
+	url = https://github.com/xob0t/gotohp.git

@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "appVersion": "7.92.0",
+  "scope": "main app and GooglePhotos_GeneratedFramework instance-method metadata; not complete semantic analysis",
+  "images": [
+    {
+      "image": "main",
+      "binary": "Payload/GooglePhotos.app/GooglePhotos",
+      "binarySHA256": "0395330b2170256ec4ca240afad8672d0e0ab19e03acc10e74e04bce8b73858d",
+      "classEntries": 12643,
+      "methodEntries": 98308,
+      "index": "main-methods.json.gz",
+      "indexSHA256": "cbf1f8191cb60b03e6fa30534ee716f6c68ec4ac036630e6261225a2570e3119"
+    },
+    {
+      "image": "framework",
+      "binary": "Payload/GooglePhotos.app/Frameworks/GooglePhotos_GeneratedFramework.framework/GooglePhotos_GeneratedFramework",
+      "binarySHA256": "be2629c366b134ae63a80023a77165b30866e890a398a17eb423af80526983d6",
+      "classEntries": 13540,
+      "methodEntries": 66708,
+      "index": "framework-methods.json.gz",
+      "indexSHA256": "9e51e47241af9d9649ac17383b138cbda0149fe7cbb20947ce53fdade4693ef9"
+    }
+  ],
+  "classEntries": 26183,
+  "methodEntries": 165016
+}
