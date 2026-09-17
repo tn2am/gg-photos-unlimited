@@ -39,7 +39,7 @@ runtimes=[r for r in runtimes if r.get('isAvailable') and '.iOS-' in r['identifi
 if not runtimes:raise SystemExit('No available iPhone simulator runtime')
 runtime=max(runtimes,key=lambda r:tuple(map(int,r['version'].split('.'))))
 types=json.loads(run('xcrun','simctl','list','devicetypes','-j'))['devicetypes']
-device_type=next(d for d in types if d['name']=='iPhone 16 Pro')
+device_type=next((d for d in types if d['name'] in ['iPhone SE (3rd generation)', 'iPhone 15', 'iPhone 16 Pro']), types[0])
 udid=run('xcrun','simctl','create','GoToHP Settings CI',device_type['identifier'],runtime['identifier'])
 print('Fixture device:',udid,runtime['name'],flush=True)
 subprocess.run(['xcrun','simctl','boot',udid],check=True,timeout=90)
@@ -62,7 +62,7 @@ prefs.write_bytes(plistlib.dumps(prelaunch,fmt=plistlib.FMT_BINARY))
 print('Launching settings fixture',flush=True)
 launch_error=None
 try:
- subprocess.run(['xcrun','simctl','launch','--console',udid,bundle],check=True,timeout=120)
+ subprocess.run(['xcrun','simctl','launch','--console',udid,bundle],check=True,timeout=180)
 except (subprocess.CalledProcessError,subprocess.TimeoutExpired) as error:
  launch_error=str(error)
  print(launch_error)

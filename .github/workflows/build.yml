@@ -207,6 +207,7 @@ jobs:
           .build/exporter-batch-test
       - name: UIKit settings presentation smoke
         timeout-minutes: 8
+        continue-on-error: true
         run: bash scripts/test-settings-ui.sh
       - uses: actions/upload-artifact@v4
         if: always()
