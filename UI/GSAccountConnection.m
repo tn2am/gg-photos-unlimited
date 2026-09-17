@@ -1,6 +1,5 @@
 #import "GSAccountConnection.h"
 #import "GSNativeAccount.h"
-#import "GSNativeRouting.h"
 #import "../Shared/IPCProtocol.h"
 #if !GS_JAILED
 #import "GSNativeRelay.h"
@@ -44,7 +43,10 @@ static void GSConnectAvailableAccount(BOOL foreground) {
    GSConnected=success;GSConnectionRecord(success?@"connected":@"failed");
    if(success&&account[@"email"]){
     NSString *current=[NSUserDefaults.standardUserDefaults stringForKey:@"dev.tqmane.gunshot.routeAccount"];
-    if(!current.length)GSSetNativeRouting(YES,account[@"email"]);
+    if(!current.length){
+     [NSUserDefaults.standardUserDefaults setObject:account[@"email"] forKey:@"dev.tqmane.gunshot.routeAccount"];
+     [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"dev.tqmane.gunshot.routeManualBackup"];
+    }
    }
   });
  }});

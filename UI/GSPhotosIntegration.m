@@ -54,9 +54,9 @@ static BOOL GSHasConfirmedOriginal(id controller){
  unsigned char originals=((unsigned char(*)(id,SEL))objc_msgSend)(photo,NSSelectorFromString(@"hasOriginalBytes"));
  // Enum descriptor: Unknown=0, Yes=1, No=2, Maybe=3.
  GSCount(originals==1?@"serverOriginal":originals==2?@"serverNotOriginal":@"serverOriginalUnknown");
- if(originals==2||((BOOL(*)(id,SEL))objc_msgSend)(photo,NSSelectorFromString(@"isPartialBackup")))return NO;
+ if(originals!=1||((BOOL(*)(id,SEL))objc_msgSend)(photo,NSSelectorFromString(@"isPartialBackup")))return NO;
  unsigned char policy=((unsigned char(*)(id,SEL))objc_msgSend)(photo,NSSelectorFromString(@"storagePolicy"));
- if(policy!=1&&policy!=0)return NO;
+ if(policy!=1)return NO;
  return YES;
 }
 // 7.20.2 builds a native label/image content model instead of BackupStatusData.

@@ -29,7 +29,7 @@ type Options struct {
 }
 
 func defaults() Options {
-	return Options{Quality: "original", Concurrent: 3, Retries: 5, WiFiOnly: false}
+	return Options{Quality: "saver", Concurrent: 1, Retries: 1, WiFiOnly: true}
 }
 func (o Options) valid() bool {
 	return validQuality(o.Quality) && o.Concurrent >= 1 && o.Concurrent <= 8 && o.Retries >= 0 && o.Retries <= 20
