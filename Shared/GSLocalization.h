@@ -25,7 +25,8 @@ static inline NSString *GSLanguage(void) {
  NSString *value=GSLanguageOverride();
  if([value isEqual:@"system"]){
   NSString *preferred=GSLanguageForPreferences(NSLocale.preferredLanguages);
-  return [preferred isEqual:@"en"]?@"vi":preferred;
+  if([preferred isEqual:@"ja"]||[preferred isEqual:@"zh-hans"])return preferred;
+  return @"vi";
  }
  return value;
 }

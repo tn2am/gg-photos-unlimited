@@ -72,6 +72,7 @@
  self.navigationItem.leftBarButtonItem.title=GSL(@"Done");
  self.navigationItem.rightBarButtonItem.title=self.settingsMode?GSL(@"Reconnect"):GSL(@"Add");
  if(self.navigationItem.rightBarButtonItems.count>1)self.navigationItem.rightBarButtonItems[1].title=self.settingsMode?GSL(@"Uploads"):GSL(@"Settings");
+ if(self.settingsMode)self.navigationItem.prompt=@"GoToHP Mod v2.0 · Unlimited Original";
 }
 - (void)chooseLanguage{
  UIAlertController *sheet=[UIAlertController alertControllerWithTitle:GSL(@"Language") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -280,7 +281,7 @@
 - (void)chooseValueForControl:(NSInteger)control{
  NSString *key=@[@"quality",@"concurrent",@"retries"][control];
  UIAlertController *sheet=[UIAlertController alertControllerWithTitle:@[GSL(@"Quality"),GSL(@"Concurrent uploads"),GSL(@"Retry limit")][control] message:nil preferredStyle:UIAlertControllerStyleActionSheet];
- NSArray *values=control==0?@[@"original",@"saver",@"quota"]:control==1?@[@1,@2,@3,@4]:@[@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10];
+ NSArray *values=control==0?@[@"original",@"saver",@"quota"]:control==1?@[@1,@2,@3,@4,@6,@8]:@[@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@15,@20];
  for(id value in values){
   NSString *title=control==0?[self qualityTitle:value]:[NSString stringWithFormat:@"%@ %@",value,control==1?GSL(@"uploads"):GSL(@"retries")];
   if([value isEqual:self.options[key]])title=[@"✓ " stringByAppendingString:title];
